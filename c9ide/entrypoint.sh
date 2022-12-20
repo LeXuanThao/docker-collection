@@ -1,3 +1,3 @@
 #!/bin/bash
-nohup ./server.js -p 8080 &> /dev/null &
-nginx -g 'daemon off;'
+nginx -g 'daemon off;' &> /dev/null &
+su - ubuntu -c "cd /home/ubuntu/c9sdk && ./server.js -p 8080 -w /home/ubuntu/workspace"

@@ -14,6 +14,8 @@ RUN echo "ubuntu    ALL=(ALL)   NOPASSWD:ALL" | tee "/etc/sudoers.d/ubuntu"
 RUN rm -rf /etc/nginx/sites-enabled/default
 COPY ./nginx.conf /etc/nginx/sites-enabled/default
 
+# CMD ["nginx", "-g", "daemon off;"]
+
 USER ubuntu
 WORKDIR /home/ubuntu
 
@@ -30,11 +32,7 @@ VOLUME ["/home/ubuntu/workspace"]
 
 EXPOSE 80
 
-RUN nohup ./server.js -p 8080 &> /dev/null &
-
 USER root
-
-# RUN ls -la /etc/nginx/sites-enabled && sleep 9999;
-CMD ["nginx", "-g", "daemon off;"]
 ADD ./entrypoint.sh /entrypoint.sh
-ENTRYPOINT /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]

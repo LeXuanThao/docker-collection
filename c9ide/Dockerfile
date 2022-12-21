@@ -2,7 +2,10 @@ FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
-RUN apt-get install -y gcc make git sudo python python-pip curl wget locales nginx
+RUN apt-get install -y software-properties-common gcc make git sudo python python-pip curl wget locales nginx
+RUN add-apt-repository -y ppa:ondrej/php
+RUN apt-get update
+RUN apt -y install php7.4
 
 RUN locale-gen en_US en_US.UTF-8
 

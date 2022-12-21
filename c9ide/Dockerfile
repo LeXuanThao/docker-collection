@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
-RUN apt-get install -y gcc make git sudo python curl wget locales nginx g++ tmux
+RUN apt-get install -y gcc make git sudo python python-pip curl wget locales nginx
 
 RUN locale-gen en_US en_US.UTF-8
 
@@ -17,9 +17,22 @@ COPY ./nginx.conf /etc/nginx/sites-enabled/default
 # CMD ["nginx", "-g", "daemon off;"]
 
 USER ubuntu
+
+# install phpintel
+RUN sudo pip install -U virtualenv
+RUN virtualenv --python=python2 $HOME/.c9/python2
+RUN . $HOME/.c9/python2/bin/activate \
+    && mkdir /tmp/codeintel \
+    && pip download -d /tmp/codeintel codeintel==0.9.3 \
+    && cd /tmp/codeintel \
+    && tar xf CodeIntel-0.9.3.tar.gz \
+    && mv CodeIntel-0.9.3/SilverCity CodeIntel-0.9.3/silvercity \
+    && tar czf CodeIntel-0.9.3.tar.gz CodeIntel-0.9.3 \
+    && pip install -U --no-index --find-links=/tmp/codeintel codeintel
+
 WORKDIR /home/ubuntu
 
-RUN git clone https://github.com/c9/core.git c9sdk
+RUN git clone https://github.com/LeXuanThao/c9-core.git c9sdk
 WORKDIR /home/ubuntu/c9sdk
 
 RUN ./scripts/install-sdk.sh

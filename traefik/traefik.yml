@@ -1,0 +1,11 @@
+providers:
+  file:
+    directory: /traefik.d
+    watch: true
+  docker:
+    watch: true
+    exposedByDefault: false
+
+api:
+  dashboard: true
+  insecure: true

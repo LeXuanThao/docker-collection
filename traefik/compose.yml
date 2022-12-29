@@ -1,0 +1,20 @@
+version: '3.9'
+
+networks:
+  web:
+    external: true
+
+services:
+  traefik:
+    image: traefik:v2.5
+    container_name: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./traefik.yml:/traefik.yml
+      - ./traefik.d:/traefik.d
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - web

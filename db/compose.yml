@@ -1,0 +1,45 @@
+version: "3.9"
+
+networks:
+  web:
+    external: true
+
+services:
+  mariadb:
+    image: mariadb:10.3
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mariadb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - web
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mariadb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.localhost`)"
+    networks:
+      - web
+    depends_on:
+      - mariadb
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    volumes:
+        - ./redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+        - "6379:6379"
+
+volumes:
+    mariadb:
